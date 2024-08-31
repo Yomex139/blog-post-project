@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">requests</span>
+<span class="s0">import </span><span class="s1">datetime</span>
+<span class="s0">from </span><span class="s1">flask </span><span class="s0">import </span><span class="s1">Flask</span><span class="s2">, </span><span class="s1">render_template</span><span class="s2">, </span><span class="s1">url_for</span>
+
+<span class="s1">app </span><span class="s2">= </span><span class="s1">Flask</span><span class="s2">(</span><span class="s1">__name__</span><span class="s2">)</span>
+
+<span class="s1">posts </span><span class="s2">= </span><span class="s1">requests</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">url</span><span class="s2">=</span><span class="s3">' https://api.npoint.io/5d1cc9b914439c7446a8'</span><span class="s2">).</span><span class="s1">json</span><span class="s2">()</span>
+<span class="s1">date </span><span class="s2">= </span><span class="s1">datetime</span><span class="s2">.</span><span class="s1">datetime</span><span class="s2">.</span><span class="s1">now</span><span class="s2">().</span><span class="s1">date</span><span class="s2">().</span><span class="s1">strftime</span><span class="s2">(</span><span class="s3">'%B %d, %Y'</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s3">&quot;/&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">homepage</span><span class="s2">():</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s3">'index.html'</span><span class="s2">, </span><span class="s1">all_post</span><span class="s2">=</span><span class="s1">posts</span><span class="s2">, </span><span class="s1">posted</span><span class="s2">=</span><span class="s1">date</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s3">&quot;/about&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">About</span><span class="s2">():</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s3">'about.html'</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s3">&quot;/contact&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">Contact</span><span class="s2">():</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s3">'contact.html'</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s3">&quot;/post/&lt;int:index&gt;&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">post</span><span class="s2">(</span><span class="s1">index</span><span class="s2">):</span>
+    <span class="s1">requested </span><span class="s2">= </span><span class="s0">None</span>
+    <span class="s0">for </span><span class="s1">posted </span><span class="s0">in </span><span class="s1">posts</span><span class="s2">:</span>
+        <span class="s0">if </span><span class="s1">posted</span><span class="s2">[</span><span class="s3">'id'</span><span class="s2">] == </span><span class="s1">index</span><span class="s2">:</span>
+            <span class="s1">requested </span><span class="s2">= </span><span class="s1">posted</span>
+            <span class="s1">print</span><span class="s2">(</span><span class="s1">requested</span><span class="s2">)</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s3">'post.html'</span><span class="s2">, </span><span class="s1">post</span><span class="s2">=</span><span class="s1">requested</span><span class="s2">, </span><span class="s1">date</span><span class="s2">=</span><span class="s1">date</span><span class="s2">)</span>
+
+
+<span class="s0">if </span><span class="s1">__name__ </span><span class="s2">== </span><span class="s3">'__main__'</span><span class="s2">:</span>
+    <span class="s1">app</span><span class="s2">.</span><span class="s1">run</span><span class="s2">(</span><span class="s1">debug</span><span class="s2">=</span><span class="s0">True</span><span class="s2">, </span><span class="s1">port</span><span class="s2">=</span><span class="s4">5000</span><span class="s2">, </span><span class="s1">host</span><span class="s2">=</span><span class="s3">'localhost'</span><span class="s2">)</span>
+</pre>
+</body>
+</html>
